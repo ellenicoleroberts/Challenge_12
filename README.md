@@ -1,124 +1,78 @@
 <img src= "images/default.png" width="930" height="330">
 
-# Credit Risk Classification
+## __Credit Risk Analysis Report__
 
-Credit risk poses a classification problem that’s inherently imbalanced. This is because healthy loans easily outnumber risky loans. In this Challenge, you’ll use various techniques to train and evaluate models with imbalanced classes. You’ll use a dataset of historical lending activity from a peer-to-peer lending services company to build a model that can identify the creditworthiness of borrowers.
+### __Overview of the Analysis__
 
-What You're Creating
-Using your knowledge of the imbalanced-learn library, you’ll use a logistic regression model to compare two versions of the dataset. First, you’ll use the original dataset. Second, you’ll resample the data by using the RandomOverSampler module from the imbalanced-learn library.
+Credit risk poses a classification problem that’s inherently imbalanced because healthy loans vastly outnumber risky loans. 
 
-For both cases, you’ll get the count of the target classes, train a logistic regression classifier, calculate the balanced accuracy score, generate a confusion matrix, and generate a classification report.
+Using a dataset of historical lending activity from a peer-to-peer lending services company, the included notebook in this repo (credit_risk_resampling.ipynb) uses various techniques to train and evaluate models with imbalanced classes to identify the creditworthiness of borrowers. Using various borrower metrics, including the size of the loan, the interest rate, the borrower's income, the debt-to-income ratio, the borrower's number of accounts, any derogatory marks, and total debt-loan status, the notebook identifies the *best* model to predict which loans are at a high-risk of defaulting.
+
+This analysis compares the performance of the two different machine learning approaches used: (1) using a logistic regression model with original data, and (2) using a logistic regression model with oversampled data. The performance is determined by way of accuracy, precision, and recall, each being a metric of how well the model predicts the target variable, 'y' (which is whether a loan will remain healthy or be at a high-risk of default).
+
+The first part of this notebook imports the data via the lending_data.csv file from the Resources folder, and then splits this data into training and testing sets. For reference, a value of '0' in the “loan_status” column means that the loan is healthy while a value of '1' means that the loan has a high risk of defaulting.
+
+A logistic regression model is instantiated and fitted with the original data. Predictions are made for the testing data and saved. The model's performance is then evaluated by way of an accuracy score, a confusion matrix, and a classification report.
+
+Next, another logistic regression model is instantiated and fitted but this time with resampled training data. Resampled data, obtained using the RandomOverSampler module from the imbalanced-learn library, is used as a way to correct for the small number of high-risk loan labels. Note, `value_counts` was used initially to show the extent of the imbalance between the healthy-loans class and loans-at-high-risk class, and later again used after the training data was resampled. As expected, after resampling, the two classes were perfectly balanced with equal numbers in each class.
+
+Using this model fit on the resampled training data, predictions are made for the testing data and saved. The model's performance is then evaluated by way of an accuracy score, a confusion matrix, and a classification report.
+
+### __Results__
+
+Listed here are the balanced accuracy scores and the precision and recall scores of both machine learning models:
+
+* **Logistic Regression model using original data**:
+  * Accuracy: .95
+  * Precision: 1.00 (class '0'), .85 (class '1')
+  * Recall: .99 (class '0'), .91 (class '1')
+  
+* **Logistic Regression model using resampled data**:
+  * Accuracy: .99
+  * Precision: 1.00 (class '0'), .84 (class '1')
+  * Recall: .99 (class '0'), .99 (class '1')
+
+### __Summary__
+
+Overall, the logistic regression model fit with oversampled data is superior to the logistic regression model fit with original data. First, the accuracy score is higher for the resampled data than it was for the original data (0.95 vs 0.99), meaning that the model using resampled data was better at detecting true positives and true negatives.
+
+Regarding precision, the logistic regression model fit with oversampled data predicts the '0' (healthy loan) label very well with a perfect score of 1.00; regarding the '1' (high-risk loan) label, it does not do as well with a precision rating of .84. This is one percentage point below the precision score for the '1' class (.85) of the model trained on the original data, meaning that the model using the original data was slightly better at detecting the users that were actually going to be at high risk of defaulting.
+
+Sacrificing a little precision however is not a bad trade-off when you consider the improved recall score for the resampled data for the '1' label: .99 versus .91. So, there was a considerable improvement in the '1' label's recall score when using resampled data, meaning that the resampled data correctly clasified a higher percentage of the truly at-high-risk borrowers. Regarding the '0' label's recall score, it was excellent at .99 for both original and resampled data.
+
+All in, the model using resampled data was better at detecting borrowers who are likely to default than the model generated using the original, imbalanced dataset. We recommend using the logistic regression model with the resampled data.
 
 ---
 
-## Technologies
+## __Technologies__
 
 This application leverages python 3.7 with the following packages that require additional installation:
 
 * pandas: an open-source library that offers easy-to-use data analysis tools for Python.
-* fbprophet: FbProphet is a powerful time series analysis package released by Core Data Science Team at Facebook.
-* hvplot: hvPlot provides a high-level plotting API built on HoloViews that provides a general and consistent API for plotting data.
-* holoviews: a Python library designed to make data analysis and visualization seamless and simple.
-* matplotlib: a comprehensive library for creating static, animated, and interactive visualizations in Python.
+* pathlib: for creation of file paths allowing the application to interact with a computer's filesystem.
+* sklearn: a Python library for machine learning and statistical modeling including tools for classification, regression, clustering and dimensionality reduction.
 
 ---
 
-## Installation Guide
+## __Installation Guide__
 
 Begin by cloning the GitHub repo (the same repo that this README.md file is contained within) into your terminal. 
 
-Because this code uses [Facebook Prophet library](https://facebook.github.io/prophet/), which can be difficult to install on some machines, we recommend using the Google Colab IDE. Google Colab allows you to run Jupyter Notebooks in the cloud. By installing libraries within Google Colab instead of onto your machine, you are installing them only temporarily, in memory, while using the cloud. 
+Then activate the correct environment by inputting the following command into your terminal:
 
-To configure a [Google Colab](https://colab.research.google.com/) workspace:
+`conda activate dev`
 
-* Open Google Colab and upload the notebook contained within this repo.
-
-* Run the provided code in the notebook's install section and import the required libraries and dependencies in the following section.
+Within this environment, next install the above listed dependencies. To do so, in your terminal while in this same repo, enter `pip install -r requirements.txt`.
 
 ---
 
-## Usage
-
-This challenge consists of the following subsections:
-
-Split the Data into Training and Testing Sets
-
-Create a Logistic Regression Model with the Original Data
-
-Predict a Logistic Regression Model with Resampled Training Data
-
-Write a Credit Risk Analysis Report
-
-Split the Data into Training and Testing Sets
-Open the starter code notebook and then use it to complete the following steps.
-
-Read the lending_data.csv data from the Resources folder into a Pandas DataFrame.
-
-Create the labels set (y) from the “loan_status” column, and then create the features (X) DataFrame from the remaining columns.
-
-NOTE
-A value of 0 in the “loan_status” column means that the loan is healthy. A value of 1 means that the loan has a high risk of defaulting.
-
-Check the balance of the labels variable (y) by using the value_counts function.
-
-Split the data into training and testing datasets by using train_test_split.
-
-Create a Logistic Regression Model with the Original Data
-Employ your knowledge of logistic regression to complete the following steps:
-
-Fit a logistic regression model by using the training data (X_train and y_train).
-
-Save the predictions on the testing data labels by using the testing feature data (X_test) and the fitted model.
-
-Evaluate the model’s performance by doing the following:
-
-Calculate the accuracy score of the model.
-
-Generate a confusion matrix.
-
-Print the classification report.
-
-Answer the following question: How well does the logistic regression model predict both the 0 (healthy loan) and 1 (high-risk loan) labels?
-
-Predict a Logistic Regression Model with Resampled Training Data
-Did you notice the small number of high-risk loan labels? Perhaps, a model that uses resampled data will perform better. You’ll thus resample the training data and then reevaluate the model. Specifically, you’ll use RandomOverSampler.
-
-To do so, complete the following steps:
-
-Use the RandomOverSampler module from the imbalanced-learn library to resample the data. Be sure to confirm that the labels have an equal number of data points.
-
-Use the LogisticRegression classifier and the resampled data to fit the model and make predictions.
-
-Evaluate the model’s performance by doing the following:
-
-Calculate the accuracy score of the model.
-
-Generate a confusion matrix.
-
-Print the classification report.
-
-Answer the following question: How well does the logistic regression model, fit with oversampled data, predict both the 0 (healthy loan) and 1 (high-risk loan) labels?
-
-Write a Credit Risk Analysis Report
-For this section, you’ll write a brief report that includes a summary and an analysis of the performance of both machine learning models that you used in this challenge. You should write this report as the README.md file included in your GitHub repository.
-
-Structure your report by using the report template that Starter_Code.zip includes, and make sure that it contains the following:
-
-An overview of the analysis: Explain the purpose of this analysis.
-
-The results: Using bulleted lists, describe the balanced accuracy scores and the precision and recall scores of both machine learning models.
-
-A summary: Summarize the results from the machine learning models. Compare the two versions of the dataset predictions. Include your recommendation, if any, for the model to use the original vs. the resampled data. If you don’t recommend either model, justify your reasoning.
-
----
-
-## Contributors
+## __Contributors__
 
 Nicole Roberts,
 elle.nicole.roberts@gmail.com
 
 ---
 
-## License
+## __License__
 
 [BSD 3](https://choosealicense.com/licenses/bsd-3-clause-clear/): BSD 3-clause is a permissive licence, allowing nearly unlimited freedom with the software as long as BSD copyright and license notice is included.
