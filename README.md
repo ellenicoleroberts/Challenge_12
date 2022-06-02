@@ -1,4 +1,4 @@
-<img src= "images/fraud.png" width="930" height="300">
+<img src= "images/default.png" width="930" height="300">
 
 # Credit Risk Classification
 
