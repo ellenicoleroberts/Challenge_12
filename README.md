@@ -1,10 +1,13 @@
-<img src= "images/default.png" width="930" height="300">
+<img src= "images/default.png" width="930" height="330">
 
 # Credit Risk Classification
 
-With over 200 million users, MercadoLibre is the most popular e-commerce site in Latin America. This notebook analyzes the company's financial and user time series data in order to predict if search traffic can translate into the ability to successfully trade the stock.
+Credit risk poses a classification problem that’s inherently imbalanced. This is because healthy loans easily outnumber risky loans. In this Challenge, you’ll use various techniques to train and evaluate models with imbalanced classes. You’ll use a dataset of historical lending activity from a peer-to-peer lending services company to build a model that can identify the creditworthiness of borrowers.
 
-Specifically, the notebook includes depictions of seasonality (as measured by Google Search traffic), evaluates how the company’s stock price correlates to its Google Search traffic, and uses forecast models to predict hourly user search traffic and revenues.
+What You're Creating
+Using your knowledge of the imbalanced-learn library, you’ll use a logistic regression model to compare two versions of the dataset. First, you’ll use the original dataset. Second, you’ll resample the data by using the RandomOverSampler module from the imbalanced-learn library.
+
+For both cases, you’ll get the count of the target classes, train a logistic regression classifier, calculate the balanced accuracy score, generate a confusion matrix, and generate a classification report.
 
 ---
 
@@ -36,51 +39,76 @@ To configure a [Google Colab](https://colab.research.google.com/) workspace:
 
 ## Usage
 
-**Part 1: Find Unusual Patterns in Hourly Google Search Traffic**
+This challenge consists of the following subsections:
 
-This section investigates whether the Google search traffic for the company links to any financial events at the company by selecting unusual patterns in the Google search data for the company and connecting them to the corporate financial events.
+Split the Data into Training and Testing Sets
 
-To do so, the code reads the search data into a DataFrame, and then slices the data to just the month of May 2020 (during this month, MercadoLibre released its quarterly financial results). Using hvPlot to visualize the results, any notable patterns are identified. 
+Create a Logistic Regression Model with the Original Data
 
-Next, the total search traffic for the month is calculated and then compared to the monthly median across all months. 
+Predict a Logistic Regression Model with Resampled Training Data
 
-**Part 2: Mine the Search Traffic Data for Seasonality**
+Write a Credit Risk Analysis Report
 
-This section tracks and predicts interest in the company and its platform for any time of day, permitting the marketing team to focus their efforts around the times that have the most traffic in order to achieve greater return on investment.
+Split the Data into Training and Testing Sets
+Open the starter code notebook and then use it to complete the following steps.
 
-In pursuit of this goal, the code mines the search traffic data for predictable seasonal patterns of interest in the company by first collecting the hourly search data and plotting it by day-of-the-week. Visualizing this traffic as a heatmap, referencing the index.hour as the x-axis and the index.dayofweek as the y-axis, the user is able to view day-of-week effects and their concentration over the course of the day.
+Read the lending_data.csv data from the Resources folder into a Pandas DataFrame.
 
-Next, the search data is grouped by the week-of-the-year to depict weekly patterns across the calendar year.
+Create the labels set (y) from the “loan_status” column, and then create the features (X) DataFrame from the remaining columns.
 
-**Part 3: Relate the Search Traffic to Stock Price Patterns**
+NOTE
+A value of 0 in the “loan_status” column means that the loan is healthy. A value of 1 means that the loan has a high risk of defaulting.
 
-This section investigates whether any relationship between the search data and the company stock price exists.
+Check the balance of the labels variable (y) by using the value_counts function.
 
-To do so, the code first reads in and plots the stock price data then concatenates the stock price data to the search data in a single DataFrame. 
+Split the data into training and testing datasets by using train_test_split.
 
-Next, the code slices the data to just the first half of 2020 (2020-01 to 2020-06), and then use hvPlot to plot the data.
+Create a Logistic Regression Model with the Original Data
+Employ your knowledge of logistic regression to complete the following steps:
 
-A new column in the DataFrame is then created named “Lagged Search Trends” that offsets, or shifts, the search traffic by one hour, along with two additional columns: “Stock Volatility”, which holds an exponentially weighted four-hour rolling average of the company’s stock volatility, and “Hourly Stock Return”, which holds the percent change of the company's stock price on an hourly basis.
+Fit a logistic regression model by using the training data (X_train and y_train).
 
-The time series correlations are then reviewed, and any predictable relationships existing between the lagged search traffic and the stock volatility or between the lagged search traffic and the stock price returns are noted.
+Save the predictions on the testing data labels by using the testing feature data (X_test) and the fitted model.
 
-**Part 4: Create a Time Series Model with Prophet**
+Evaluate the model’s performance by doing the following:
 
-In this section, a time series model that analyzes and forecasts patterns in the hourly search data is created using Prophet. 
+Calculate the accuracy score of the model.
 
-After estimating the model, the forecast is plotted, along with the individual time series components of the model to depict which time of day exhibits the greatest popularity, which day of the week gets the most search traffic, and what the lowest point for search traffic is in the calendar year.
+Generate a confusion matrix.
 
-**Part 5: Forecast Revenue by Using Time Series Models**
+Print the classification report.
 
-This section generates a forecast of the total sales for the next quarter.
+Answer the following question: How well does the logistic regression model predict both the 0 (healthy loan) and 1 (high-risk loan) labels?
 
-The daily historical revenue figures are read-in, and then a Prophet model is applied to the data and the forecast for the next quarter is plotted (as shown here).
+Predict a Logistic Regression Model with Resampled Training Data
+Did you notice the small number of high-risk loan labels? Perhaps, a model that uses resampled data will perform better. You’ll thus resample the training data and then reevaluate the model. Specifically, you’ll use RandomOverSampler.
 
-![Revenue forecast example.](images/revenueforecast.png)
+To do so, complete the following steps:
 
-The model's output is interpreted to identify any patterns in the company's revenue, specifically which are the peak revenue days.
+Use the RandomOverSampler module from the imbalanced-learn library to resample the data. Be sure to confirm that the labels have an equal number of data points.
 
-A sales forecast for the finance group is finally produced including a number for the expected total sales in the next quarter along with the best- and worst-case scenarios to help MercadoLibre plan accordingly.
+Use the LogisticRegression classifier and the resampled data to fit the model and make predictions.
+
+Evaluate the model’s performance by doing the following:
+
+Calculate the accuracy score of the model.
+
+Generate a confusion matrix.
+
+Print the classification report.
+
+Answer the following question: How well does the logistic regression model, fit with oversampled data, predict both the 0 (healthy loan) and 1 (high-risk loan) labels?
+
+Write a Credit Risk Analysis Report
+For this section, you’ll write a brief report that includes a summary and an analysis of the performance of both machine learning models that you used in this challenge. You should write this report as the README.md file included in your GitHub repository.
+
+Structure your report by using the report template that Starter_Code.zip includes, and make sure that it contains the following:
+
+An overview of the analysis: Explain the purpose of this analysis.
+
+The results: Using bulleted lists, describe the balanced accuracy scores and the precision and recall scores of both machine learning models.
+
+A summary: Summarize the results from the machine learning models. Compare the two versions of the dataset predictions. Include your recommendation, if any, for the model to use the original vs. the resampled data. If you don’t recommend either model, justify your reasoning.
 
 ---
 
